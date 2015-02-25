@@ -1,5 +1,7 @@
 #final project
-# first column
+getwd()
+setwd("~/Documents/Github/Red-wine-quality")
+# first column don't have much infor
 # 1pair
 # 2 histogram of quality 
 # 3 hist of alcoho
@@ -23,12 +25,13 @@
 # 19
 # 20
 
+library(ggplot2)
+library(memsic)
+
 redwine<-read.csv('wineQualityReds.csv')
 names(redwine)
 
-
-
-#pair
+#1 pair
 ggpairs(rw,params=c(shape=I('.'),outlier.shap=I('.')))
 svg("matrix.svg",height=8,width=8)
 ggpairs(data) 
@@ -36,24 +39,16 @@ dev.off()
 #there are some interesting correlation between component but we are not interested in that
 # summary of all variables
 
-#1 hist of quality
-ggplot(aes(x = quality), data = redwine)+geom_histogram()
+#2 hist of quality
+ggplot(aes(x = quality), data = redwine)+ geom_bar()
 
 
-
-#2
+#3
 #scatter plot
 cor.test(rw$quality, rw$alcohol,method='pearson') 
 ggplot(aes(x=quality,y=sulphates),data=redwine)+
   geom_point()
 # a little over plot
-
-#3 add alpha
-ggplot(aes(x=quality,y=sulphates),data=redwine)+
-  geom_point(color='#F79420',alpha=1/2)
- 
-
-
 
 #4 add mean and variance
 ggplot(aes(x=quality,y=alcohol),data=redwine)+
@@ -77,10 +72,7 @@ ggplot(aes(x=quality,y=volatile.acidity),data=redwine)+
   geom_line(stat='summary',fun.y = quantile,probs = .5,
             linetype =2, color='blue')
 
-# 7 multivarialbe
-ggplot(aes(x = quality, y = alcohol), data = redwine) +
-  geom_point(aes(color =  sulphates))
-# how to make scale more visible
+
   
 # regression
 
@@ -89,21 +81,16 @@ ggplot(aes(x=quality,y=alcohol),data=redwine)+
   geom_boxplot()
   
 
-
-ggplot(aes(x=www_likes_received,y=likes_received),data=pf)+
-  geom_point()+
-  xlim(0,quantile(pf$www_likes_received,0.95))+
-  ylim(0,quantile(pf$likes_received,0.95))+ #zoom in percentile 
-  geom_smooth(method='lm',color='red')
-cor.test(pf$www_likes_received, pf$likes_received,method='pearson')    
-
-
 #5 box
 # use percantage to show that
-ggplot(aes(x = alcohol), data = rw)+ facet_wrap( ~ quality) +geom_histogram()
+ggplot(aes(x = alcohol), data = redwine)+ facet_wrap( ~ quality) +geom_histogram(aes(y=..count../sum(..count..)))
 #ggplot(aes(x = price), data = diamonds) + facet_wrap( ~ color) + geom_histogram(aes(fill = cut)) +scale_x_log10()+ scale_y_continuous(limits = c(0,600)) + scale_fill_brewer(type = 'qual')
+ggplot(aes(x = alcohol), data = redwine)+
+  geom_histogram(aes(y=..count../sum(..count..)))+ 
+  facet_wrap( ~ quality) 
 
-# line plot
+
+# 8  line plot
 library(dplyr)
 redwine.median_by_quality<-redwine %>%
   #  filter(!is.na(gender))%>%
@@ -125,3 +112,81 @@ ggplot(aes(x=quality),data=redwine.median_by_quality)+
 
 cor(rw$density, rw$quality)
 
+# turn to categroical 
+redwine$grade<-cut(redwine$quality, c(2.5,4.5,6.5,8.5),labels=c('low','mid','high'))
+
+# box plot
+ggplot(redwine, aes(x=grade, y=alcohol)) + geom_boxplot()
+ggplot(redwine, aes(x=grade, y=volatile.acidity)) + geom_boxplot()
+ggplot(redwine, aes(x=grade, y=citric.acid)) + geom_boxplot()
+ggplot(redwine, aes(x=grade, y=sulphates)) + geom_boxplot()
+
+# 7 multivarialbe
+ggplot(aes(x = volatile.acidity, y = citric.acid), data = redwine) +
+  geom_point(aes(color =  grade))
+
+#8
+ggplot(aes(x = volatile.acidity, y = alcohol), data = redwine) +
+  geom_point(aes(color =  grade))
+
+#9
+# Overlaid histograms with means
+ggplot(redwine, aes(x=alcohol, fill=grade)) +
+  geom_histogram(binwidth=.5, alpha=.5, position="identity")
+
+# Overlaid histograms with means
+ggplot(redwine, aes(x=alcohol, fill=grade)) +
+  geom_histogram(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")
+
+# Overlaid histograms with means
+ggplot(redwine, aes(x=alcohol, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")
+
+ggplot(redwine, aes(x=volatile.acidity, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")
+
+ggplot(redwine, aes(x=residual.sugar, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")
+
+ggplot(redwine, aes(x=sulphates, fill=grade)) +
+geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")
+
+
+# top wines
+# turn to categroical 
+redwine$grade_number<-cut(redwine$quality, c(2.5,3.5,4.5,5.5,6.5,7.5,8.5),labels=c('3','4','5','6','7','8'))
+
+# subset 7 and 8 wind
+top_wine<-subset(redwine,grade_number=='7' | grade_number=='8' )
+
+ggplot(top_wine, aes(x=volatile.acidity, fill=grade_number)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")
+
+# 8  line plot
+library(dplyr)
+redwine.median_by_quality<-redwine %>%
+  #  filter(!is.na(gender))%>%
+  group_by(quality)%>%
+  summarise(median_sulphates = median(sulphates),
+            median_volatile.acidity = median(volatile.acidity),
+            median_alcohol = median(alcohol),
+            median_citric.acid = median(citric.acid),
+            n=n()) %>%
+  ungroup() %>%
+  arrange(quality)
+stat='summary',fun.y = mean
+
+# Bars with other dataset; fill depends on cond2
+ggplot(top_wine, aes(x=grade_number) )+ 
+geom_bar(aes(y=alcohol),stat='summary',fun.y = mean)+   # fill depends on cond2
+  geom_bar(aes(y=sulphates),stat='summary',fun.y = mean)
+colour="black",    # Black outline for all
+position=position_dodge()) # Put bars side-by-side instead of stacked
+
+# regression
+m1<-lm(quality ~ volatile.acidity,data=redwine)
+m2<-update(m1,~. + alcohol)
+mtable(m1,m2)
+
+# reference
+# http://en.wikipedia.org/wiki/Wine_fault
