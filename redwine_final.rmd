@@ -1,7 +1,7 @@
 Red Wine Exploration by Darui Zhang
 ========================================================
 
-What property makes great red wine great? In this project we will try to answer this question by exploring the red wine data set. 
+What property makes great red wine great? In this project we try to answer this question by exploring the red wine data set. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 # Load all of the packages that you end up using
@@ -29,19 +29,21 @@ names(redwine)
 ```
 
 #Univariate Plots Section
-### Univariate Plots Selection
 
-Feature names and summary
+### Feature Names and Summary
+
+This tidy data set contains 1,599 red wines with 11 variables on the chemical properties of the wine. At least 3 wine experts rated the quality of each wine, providing a rating between 0 (very bad) and 10 (very excellent).
+
 ```{r echo=FALSE, Univariate_selection}
 names(redwine)
 summary(redwine)
-```
-This tidy data set contains 1,599 red wines with 11 variables on the chemical properties of the wine. 
+``` 
 
-### Wine Quality Distribution in the Dataset
+###  Quality Distribution
 
 The wine quality grade is a discrete number. It is ranged from 3 to 8. The median value is at 6.
-```{r echo=FALSE, More_Univariate_Plots}
+
+```{r echo=FALSE, Quality_Distribution}
   ggplot(aes(x = quality), data = redwine)+
   geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 1)+
   scale_x_discrete()+
@@ -50,41 +52,41 @@ The wine quality grade is a discrete number. It is ranged from 3 to 8. The media
 
 ```
 
-### Exploring the distribution of other chemical properties
+### Distribution of Other Chemical Properties
 
-```{r echo=FALSE, Univariate_Plots}
+```{r echo=FALSE,  Other_Properties}
 p1<-
-ggplot(aes(x = fixed.acidity), data = redwine)+
+  ggplot(aes(x = fixed.acidity), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.5)
 p2<-
-ggplot(aes(x = volatile.acidity), data = redwine)+
+  ggplot(aes(x = volatile.acidity), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.05)
 p3<-
-ggplot(aes(x = citric.acid), data = redwine)+
+  ggplot(aes(x = citric.acid), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.05)
 p4<-
-ggplot(aes(x = residual.sugar), data = redwine)+
+  ggplot(aes(x = residual.sugar), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.4)
 p5<-
-ggplot(aes(x = chlorides), data = redwine)+
+  ggplot(aes(x = chlorides), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.025)
 p6<-
-ggplot(aes(x = free.sulfur.dioxide), data = redwine)+
+  ggplot(aes(x = free.sulfur.dioxide), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 4)
 p7<-
-ggplot(aes(x = total.sulfur.dioxide), data = redwine)+
+  ggplot(aes(x = total.sulfur.dioxide), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 20)
 p8<-
-ggplot(aes(x = density), data = redwine)+
+  ggplot(aes(x = density), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.001)
 p9<-
-ggplot(aes(x = pH), data = redwine)+
+  ggplot(aes(x = pH), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.05)
 p10<-
-ggplot(aes(x = sulphates), data = redwine)+
+  ggplot(aes(x = sulphates), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.1)
 p11<-
-ggplot(aes(x = alcohol), data = redwine)+
+  ggplot(aes(x = alcohol), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.25)
 
 grid.arrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,ncol=3)
@@ -94,54 +96,53 @@ grid.arrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,ncol=3)
 
 Some observed on the distribution of the chemical property can be made:
 
-- **Normal**:  volatile.acidity, density, PH
+- **Normal**:  Volatile acidity, Density, PH
 
-- **Positively Skewed**: fixed.acidity, citric.acid, free.sulfur.dioxide, total.sulfur.dioxide,sulphates,alcohol
+- **Positively Skewed**: Fixed acidity, Citric acid, Free sulfur dioxide, Total sulfur dioxide, Sulphates, Alcohol
 
-- **Long Tail**: residual.sugar, chlorides
+- **Long Tail**: Residual sugar, Chlorides
 
-### Rescale Variables 
-The skewed and long tail data can be transformed toward more normally distribution by taking square root or log function of the data. 
-Take alcohol as a example we compare the original, square root and log of the feature.
+### Rescale Variable
 
+The skewed and long tail data can be transformed toward more normally distribution by taking square root or log function. 
+Take Sulphates as a example, we compare the original, square root and log of the feature.
 
-```{r echo=FALSE, feature_scale}
+```{r echo=FALSE,  Rescale_Variable}
 # original 
 p1<-
-ggplot(aes(x = sulphates), data = redwine)+
-  geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.1)
-# square root
+  ggplot(aes(x = sulphates), data = redwine)+
+   geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.1)
 
+# square root
 redwine$sqrt_sulphates=sqrt(redwine$sulphates)
 p2<-
-ggplot(aes(x = sqrt_sulphates), data = redwine)+
-  geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.05)
-#log
+    ggplot(aes(x = sqrt_sulphates), data = redwine)+
+     geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.05)
 
+#log
 redwine$log_sulphates=log(redwine$sulphates)
 p3<-
-ggplot(aes(x = log_sulphates), data = redwine)+
-  geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.1)
+   ggplot(aes(x = log_sulphates), data = redwine)+
+    geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.1)
 
 grid.arrange(p1,p2,p3,ncol=1)
 ```
-The square root helps a little bit, the log scale is more normal distributed
 
-
+Both the square root and the log function helps transform the feature toward normal distribution. In comparison, the log scale feature is more normal distributed.
 
 # Bivariate Plots Section
 
 ### Bivariate Plots Selection
 
-To have a glance at the data, plot matrix was use to evaluate the correlation between the wine quality and each chemical perproty.
+Plot matrix was used to have a glance at the data. We are interested the correlation between the wine quality and each chemical property.
 
-```{r echo=FALSE, Bivariate_selection}
+```{r echo=FALSE, Plot_Matrix}
 # create a plot matrix
 #ggpairs(redwine,params=c(shape=I('.'),outlier.shap=I('.')))
 
 ```
 
-The list of the top 4 factor that is correlated with the wine quality with a correlation value greater than 0.2
+The top 4 factor that is correlated with the wine quality (with a correlation value greater than 0.2)
 
 | Property         | r-value |
 |------------------|---------|
@@ -152,84 +153,105 @@ The list of the top 4 factor that is correlated with the wine quality with a cor
 
 ### Bivariate Analysis
 
-```{r echo=FALSE, scatter_Plots_original}
-ggplot(aes(x=quality,y=alcohol),data=redwine)+
-  geom_point()
+Alcohol content has the biggest correlation value to the wine quality. The scatter plot of alcohol and wine quality is shown below.
+
+
+```{r echo=FALSE, Scatter_Plots_Original}
+  ggplot(aes(x=quality,y=alcohol),data=redwine)+
+    geom_point()
 ```
+
 The original plot looks over plotted, so we add alpha value and 0.1, 0.5 and 0.9 percentile line to show the general trends.
 
-```{r echo=FALSE, scatter_Plots_improved}
+```{r echo=FALSE, Scatter_Plots_Improved}
   ggplot(aes(x=quality,y=alcohol),data=redwine)+
-  geom_point(color='#993366',alpha=1/4)+
-  geom_line(stat='summary',fun.y = quantile,probs = .5,color='#FF6660')+
-  geom_line(stat='summary',fun.y = quantile,probs = .9,
+    geom_point(color='#993366',alpha=1/4)+
+    geom_line(stat='summary',fun.y = quantile,probs = .5,color='#FF6660')+
+    geom_line(stat='summary',fun.y = quantile,probs = .9,
             linetype =2, color='#FF6660')+
-  geom_line(stat='summary',fun.y = quantile,probs = .1,
+    geom_line(stat='summary',fun.y = quantile,probs = .1,
             linetype =2, color='#FF6660')+
-  xlab("Wine Grade") + ylab("Alcohol") +
-  ggtitle("Wine Qaulity and Alchohol")
+            xlab("Wine Grade") + ylab("Alcohol") +
+    ggtitle("Wine Qaulity and Alchohol")
 ```
+
 In this plot the trend of increasing wind quality with the increasing of alcohol content can be clearly observed. 
 
 ### Transforming Wine Quality into Categorical Data
-Since the wine quality are desecrate value, we can transform it from numerical data to categorical data. And there, box plot can be used to represent the data.
+Since the wine quality are desecrate value, we can transform it from numerical data to categorical data. So that box plot can be used to represent the data.
 
-```{r echo=FALSE, transform_data}
-# turn quality  into categroical 
+```{r echo=FALSE, Transform_Quality}
+# turn quality into categroical 
 redwine$grade_number<-cut(redwine$quality, c(2.5,3.5,4.5,5.5,6.5,7.5,8.5),labels=c('3','4','5','6','7','8'))
 ```
 
-```{r echo=FALSE, box_plot}
+Higher quality wine have higher alcholol content in generally.
+```{r echo=FALSE, Alcholo_Boxplot}
 ggplot(redwine, aes(x=grade_number, y=alcohol,fill=grade_number)) + geom_boxplot()+
    xlab("Wine Grade") + ylab("Alcohol") +
-  ggtitle("Alchohol vs Wine Grade")
+    ggtitle("Alchohol vs Wine Grade")
 ```
-In generally, higher quality wine have higher alcholol content
 
-Similar we did the analysis on the other 3 factors
-```{r echo=FALSE, more_box_plot}
-p1<-
-ggplot(redwine, aes(x=grade_number, y=volatile.acidity,fill=grade_number)) + geom_boxplot()+
-   xlab("Wine Grade") + ylab("Volatile Acidity") +
+
+Similar analysis was done the 3 other factors: volatile acidity, sulphates and citric acid
+
+```{r echo=FALSE, More_Boxplot}
+
+ggplot(redwine, aes(x=grade_number, y=volatile.acidity,fill=grade_number)) +
+  geom_boxplot()+
+  xlab("Wine Quality") + 
+  ylab("Volatile Acidity") +
   ggtitle("Volatile Acidity vs Wine Grade")
-p2<-
-ggplot(redwine, aes(x=grade_number, y=sulphates,fill=grade_number)) + geom_boxplot()+
-   xlab("Wine Grade") + ylab("sulphates") +
-  ggtitle("Sulphatesy vs Wine Grade")
-p3<-
-ggplot(redwine, aes(x=grade_number, y=citric.acid,fill=grade_number)) + geom_boxplot()+
-   xlab("Wine Grade") + ylab("citric.acid") +
-  ggtitle("Citric Acid vs Wine Grade")
-grid.arrange(p1,p2,p3,ncol=1)
+
+ggplot(redwine, aes(x=grade_number, y=sulphates,fill=grade_number)) +
+  geom_boxplot()+
+   xlab("Wine Quality") + ylab("sulphates") +
+   ggtitle("Sulphatesy vs Wine Grade")
+
+ggplot(redwine, aes(x=grade_number, y=citric.acid,fill=grade_number)) + 
+   geom_boxplot()+
+   xlab("Wine Quality") + ylab("citric.acid") +
+   ggtitle("Citric Acid vs Wine Grade")
 
 ```
-### Bivariate Analysis
 
-```{r echo=FALSE, alchool_distribution_grade}
+### Distribution Analysis
+
+In this analysis, we try to find if the distribution of the chemical properties are different in each wine quality.
+
+```{r echo=FALSE, Alchool_Grade}
   ggplot(redwine, aes(x=alcohol, fill=grade_number)) +
   geom_histogram(binwidth=.5, alpha=.5, position="identity")
 ```
-Notes that the data size is not normailize
 
-```{r echo=FALSE, alchool_distribution_grade_normalized}
+Note that sine the data size for each quality is not equal, the distribution of higher and lower grades are hard to see. 
+
+A normalized plot is shown below.
+
+```{r echo=FALSE, Alchool_Grade_Normalized}
  ggplot(redwine, aes(x=alcohol, fill=grade_number)) +
   geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
   xlab("Wine Grade") + ylab("Alcohol") +
   ggtitle("Alchohol Distribuiton of Differnt Wine Grade")
 ```
-The plot looks a little busy. We ground 2 grade together
 
-```{r echo=FALSE, grouping}
+The plot looks a little busy. We ground 2 grade together: grade 3,4 as "Low", grade 5,6 as "Medium", grade 7,8 as "High". And plot again.
+
+```{r echo=FALSE, Regroup}
  #3,4 low 5,6,medium 7,8high
 redwine$grade<-cut(redwine$quality, c(2.5,4.5,6.5,8.5),labels=c('Low','Medium','High'))
+
 ggplot(redwine, aes(x=alcohol, fill=grade)) +
   geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
   xlab("Wine Grade") + ylab("Alcohol") +
   ggtitle("Alchohol Distribuiton of Differnt Wine Grade")
 ```
-this looks better
 
-```{r echo=FALSE, more_distribution_grade}
+The new plot looks cleaner.
+
+Similar analysis was done the 3 other factors: volatile acidity, sulphates and citric.acid
+
+```{r echo=FALSE, More_Distribution_Grade}
 ggplot(redwine, aes(x=volatile.acidity, fill=grade)) +
   geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
   xlab("Wine Grade") + ylab("Volatile Acidity") +
@@ -241,7 +263,9 @@ ggplot(redwine, aes(x=citric.acid, fill=grade)) +
   ggtitle("Citric Acid Distribuiton of Differnt Wine Grade")
 ```
 
-skewed, we use log
+As stated in section 1 the sulphates data is skewed, we tried both the original and the log scale of the feature.
+
+
 ```{r echo=FALSE, log_sulphates}
 
 ggplot(redwine, aes(x=sulphates, fill=grade)) +
@@ -255,18 +279,31 @@ ggplot(redwine, aes(x=log_sulphates, fill=grade)) +
   ggtitle("Sulphates Distribuiton of Differnt Wine Grade")
 ```
 
-### Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?
+The log scaled feature looks better.
 
-### Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?
+### Correlation Between Features
 
-### What was the strongest relationship you found?
+There is interesting correlaiton between two of the main features: Volatile acidity and Citric acid.
 
+```{r echo=FALSE, More_Distribution_Grade}
+ggplot(redwine, aes(x=volatile.acidity,y=citric.acid)) +
+  geom_point(color='#993366',alpha=1/2)+
+  geom_smooth()+
+  xlab("Volatile acidity") + ylab("Citric acid") +
+  ggtitle("The Correlation Betwee Volatile acidity and Citric acid")
+
+# calculate correlatio coefficient
+cor.test(redwine$volatile.acidity, redwine$citric.acid,method='pearson') 
+
+```
 
 
 
 # Multivariate Plots Section
 
-we x-y color to represent the other variable, how to encode dimension into the plot
+### Main Chemical Property vs Wine Quality
+
+With different color, we can  add another dimension into the plot. There are 4 main features.Alcohol, volatile acidity are the top two factor that affect wine quality. 
 
 ```{r echo=FALSE, Multivariate_Plots}
   ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) )+
@@ -275,16 +312,23 @@ we x-y color to represent the other variable, how to encode dimension into the p
 
 ```
 
-is discrete number, problems of over plot, jitter
-```{r echo=FALSE, jitter_Plots}
+The figure looks over ploted, since the wine quality is discrete numbers. The use jitter plot to alleviate this problem
+
+```{r echo=FALSE, Jitter_Plots}
   ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) )+
   geom_jitter(alpha=1/2,size=3)+
-  scale_colour_gradient2(low="red", high="blue",mid="#9933CC",midpoint = 0.8)
+  scale_colour_gradient2(low="red", high="blue",mid="#9933CC",midpoint = 0.8)+
 
 ```
 
-use the 3 biggest factors
-```{r echo=FALSE, facet}
+
+We can see higher quality wine have alcohol and lower volatile acidity.
+
+### Add Another Feature 
+
+Now we add the third feature, the log scale of sulphates, and use different facet to show wine grade. 
+
+```{r echo=FALSE, Third_Features}
 
 ggplot(redwine, aes(x=alcohol,y=volatile.acidity)) +
   geom_point(aes(color =  log_sulphates),alpha=1/2,size=3)+
@@ -292,22 +336,47 @@ ggplot(redwine, aes(x=alcohol,y=volatile.acidity)) +
   facet_grid(grade ~ .) 
 ```
 
-```{r echo=FALSE, grade_as}
+We can see higher quality wine have higher alcohol (x-axis), lower volatile acidity (y-axis) and higher sulphates.
+
+### Main Chemical Properties  vs Wine Quality
+
+Since we can visualized 3 dimensions, including wine quality, at a time. Two graphs will be needed to visualize the 4 main chemical properties.
+
+```{r echo=FALSE, Main_Chemical_Property}
 
 ggplot(aes(x = volatile.acidity, y = alcohol), data = redwine) +
-  geom_point(aes(color =  grade),size=2,)
-
-ggplot(aes(x = log_sulphates, y = citric.acid), data = redwine) +
-  geom_point(aes(color =  grade))
+  geom_point(aes(color =  grade),size=3,)
 ```
 
-### Multivariate Analysis
+The same trend of alcholand volatile acidity's effect on wind qaulity can be observed.
 
-### Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
+```{r echo=FALSE, Main_Chemical_Property2}
 
-### Were there any interesting or surprising interactions between features?
+ggplot(aes(x = log_sulphates, y = citric.acid), data = redwine) +
+  geom_point(aes(color =  grade),size=3,)
+```
 
-### OPTIONAL: Did you create any models with your dataset? Discuss the strengths and limitations of your model.
+We can see higher quality wine have higher sulphates (x-axis), higher citric acidity (y-axis).
+
+# Linear Multivariable Model
+
+Linear Multivariable model was created to predict the wine quality based on chemical properties. 
+
+```{r echo=FALSE, Linear_Model}
+
+  # regression
+  m1<-lm(quality ~ volatile.acidity,data=redwine)
+  m2<-update(m1,~. + alcohol)
+  m3<-update(m2,~. + sulphates)
+  m4<-update(m3,~. + citric.acid)
+  m5<-update(m4,~. + chlorides)
+  m6<-update(m5,~. + total.sulfur.dioxide)
+  m7<-update(m6,~. + density)
+  mtable(m1,m2,m3,m4,m5,m6,m7)
+
+```
+
+AIC m6 is the best, m7 the variable the first several parameter changes significantly, it is probabiy a sign of over fitting.
 
 ------
 

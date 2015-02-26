@@ -31,4 +31,4 @@ volatile.acidity and sulfur dioxide can be sign of wind faults
 acidic taste associated with volatiele act
 Sulfur dioxide	Smell of burnt matches. Can also come across as a pricking sensation in the nose.
 
-the first doesn’t tell much
+the first doesn’t 
