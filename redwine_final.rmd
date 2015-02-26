@@ -1,6 +1,8 @@
 Red Wine Exploration by Darui Zhang
 ========================================================
 
+What property makes great red wine great? In this project we will try to answer this question by exploring the red wine data set. 
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 # Load all of the packages that you end up using
 # in your analysis in this code chunk.
@@ -10,20 +12,37 @@ Red Wine Exploration by Darui Zhang
 # You should set echo=FALSE for all code chunks in your file.
 
 library(ggplot2)
+library(GGally)
+library(scales)
+library(memisc)
+library(lattice)
+library(MASS)
+library(gridExtra)
+library(dplyr)
+library(reshape)
 ```
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
-
+redwine<-read.csv('wineQualityReds.csv')
+names(redwine)
 ```
 
-# Univariate Plots Section
+# Univariate Plots Selection
+```{r echo=FALSE, Univariate_selection}
+summary(redwine)
+```
+The wine quality grade is ranged from 3 to 8, the median is 6. 
+
 ```{r echo=FALSE, Univariate_Plots}
-
+  ggplot(aes(x = quality), data = redwine)+
+  geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 1)+
+  scale_x_discrete()+
+  xlab("Wine Grade") + ylab("Count") +
+  ggtitle("Distribution of Wine Grade")
 ```
-where i can write analysis
 
-# Univariate Analysis#
+# Univariate Analysis
 is that ok?
 
 ## What is the structure of your dataset?

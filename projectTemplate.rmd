@@ -116,10 +116,28 @@ ggplot(re_arranged2, aes(x=quality, y=value, colour=abcValues)) +
     geom_line(aes(group=abcValues)) +
     geom_point(size=3)    
 
+save(re_arranged, file="re_arranged.RData")
+save(re_arranged, file="re_arranged2.RData")
+
+# histogram
+
+#final plot for
+p1<-
+ggplot(aes(x = sulphates), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.1)
+p2<-
+ggplot(aes(x = citric.acid), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.05)
+p3<-
+ggplot(aes(x = volatile.acidity), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.1)
+p4<-
+ggplot(aes(x = alcohol), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.25)
+grid.arrange(p1,p2,p3,p4,ncol=2)
 
 
-
-
+volatile.acidity
 
 ```
 
@@ -241,6 +259,18 @@ ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) )+
     ggtitle("Final weight, by diet") +
     theme(legend.position="none")  
 
+ ggplot(redwine, aes(x=alcohol)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+   # geom_histogram(colour="black") +
+    facet_grid(grade ~ .) +
+    ggtitle("Final weight, by diet") +
+    theme(legend.position="none")  
+
+# scatter plot
+ggplot(redwine, aes(x=citric.acid,y=alcohol)) +
+  geom_point(aes(color =  volatile.acidity),alpha=1/2,size=3)+scale_colour_gradient2(low="red", high="blue",mid="#9933CC",midpoint = 0.8)+
+    facet_grid(grade ~ .) 
+
 ```
 
 # Multivariate Analysis
@@ -281,3 +311,4 @@ ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) )+
 ------
 
 # Reflection
+dimention, x, y color
