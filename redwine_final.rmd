@@ -28,44 +28,153 @@ redwine<-read.csv('wineQualityReds.csv')
 names(redwine)
 ```
 
-# Univariate Plots Selection
+#Univariate Plots Section
+### Univariate Plots Selection
+
+Feature names and summary
 ```{r echo=FALSE, Univariate_selection}
+names(redwine)
 summary(redwine)
 ```
-The wine quality grade is ranged from 3 to 8, the median is 6. 
+This tidy data set contains 1,599 red wines with 11 variables on the chemical properties of the wine. 
 
-```{r echo=FALSE, Univariate_Plots}
+### Wine Quality Distribution in the Dataset
+
+The wine quality grade is a discrete number. It is ranged from 3 to 8. The median value is at 6.
+```{r echo=FALSE, More_Univariate_Plots}
   ggplot(aes(x = quality), data = redwine)+
   geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 1)+
   scale_x_discrete()+
   xlab("Wine Grade") + ylab("Count") +
   ggtitle("Distribution of Wine Grade")
+
 ```
 
-# Univariate Analysis
-is that ok?
+### Exploring the distribution of other chemical properties
 
-## What is the structure of your dataset?
-is that
+```{r echo=FALSE, Univariate_Plots}
+p1<-
+ggplot(aes(x = fixed.acidity), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.5)
+p2<-
+ggplot(aes(x = volatile.acidity), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.05)
+p3<-
+ggplot(aes(x = citric.acid), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.05)
+p4<-
+ggplot(aes(x = residual.sugar), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.4)
+p5<-
+ggplot(aes(x = chlorides), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.025)
+p6<-
+ggplot(aes(x = free.sulfur.dioxide), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 4)
+p7<-
+ggplot(aes(x = total.sulfur.dioxide), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 20)
+p8<-
+ggplot(aes(x = density), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.001)
+p9<-
+ggplot(aes(x = pH), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.05)
+p10<-
+ggplot(aes(x = sulphates), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.1)
+p11<-
+ggplot(aes(x = alcohol), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.25)
 
-### What is/are the main feature(s) of interest in your dataset?
-dfd
+grid.arrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,ncol=3)
+```
 
-### What other features in the dataset do you think will help support your investigation into your feature(s) of interest?
-dfdfd
+### Univariate Analysis
 
+Some observed on the distribution of the chemical property can be made:
 
-### Did you create any new variables from existing variables in the dataset?
+- **Normal**:  volatile.acidity, density, PH
 
-### Of the features you investigated, were there any unusual distributions? Did you perform any operations on the data to tidy, adjust, or change the form of the data? If so, why did you do this?
+- **Positively Skewed**: fixed.acidity, citric.acid, free.sulfur.dioxide, total.sulfur.dioxide,sulphates,alcohol
 
+- **Long Tail**: residual.sugar, chlorides
 
 
 # Bivariate Plots Section
-```{r echo=FALSE, Bivariate_Plots}
+
+### Bivariate Plots Selection
+
+To have a glance at the data, plot matrix was use to evaluate the correlation between the wine quality and each chemical perproty.
+
+```{r echo=FALSE, Bivariate_selection}
+# create a plot matrix
+#ggpairs(redwine,params=c(shape=I('.'),outlier.shap=I('.')))
 
 ```
 
+The list of the top 4 factor that is correlated with the wine quality with a correlation value greater than 0.2
+
+| Property         | r-value |
+|------------------|---------|
+| alcohol          | 0.476   |
+| volatile.acidity | -0.391  |
+| sulphates        | 0.251   |
+| citric.acid      | 0.226   |
+
+### Bivariate Analysis
+
+```{r echo=FALSE, scatter_Plots_original}
+ggplot(aes(x=quality,y=alcohol),data=redwine)+
+  geom_point()
+```
+The original plot looks over plotted, so we add alpha value and 0.1, 0.5 and 0.9 percentile line to show the general trends.
+
+```{r echo=FALSE, scatter_Plots_improved}
+  ggplot(aes(x=quality,y=alcohol),data=redwine)+
+  geom_point(color='#993366',alpha=1/4)+
+  geom_line(stat='summary',fun.y = quantile,probs = .5,color='#FF6660')+
+  geom_line(stat='summary',fun.y = quantile,probs = .9,
+            linetype =2, color='#FF6660')+
+  geom_line(stat='summary',fun.y = quantile,probs = .1,
+            linetype =2, color='#FF6660')+
+  xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Wine Qaulity and Alchohol")
+```
+In this plot the trend of increasing wind quality with the increasing of alcohol content can be clearly observed. 
+
+### Transforming Wine Quality into Categorical Data
+Since the wine quality are desecrate value, we can transform it from numerical data to categorical data. And there, box plot can be used to represent the data.
+
+```{r echo=FALSE, transform_data}
+# turn quality  into categroical 
+redwine$grade_number<-cut(redwine$quality, c(2.5,3.5,4.5,5.5,6.5,7.5,8.5),labels=c('3','4','5','6','7','8'))
+```
+
+```{r echo=FALSE, box_plot}
+ggplot(redwine, aes(x=grade_number, y=alcohol,fill=grade_number)) + geom_boxplot()+
+   xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Alchohol vs Wine Grade")
+```
+In generally, higher quality wine have higher alcholol content
+
+Similar we did the analysis on the other 3 factors
+```{r echo=FALSE, more_box_plot}
+p1<-
+ggplot(redwine, aes(x=grade_number, y=volatile.acidity,fill=grade_number)) + geom_boxplot()+
+   xlab("Wine Grade") + ylab("Volatile Acidity") +
+  ggtitle("Volatile Acidity vs Wine Grade")
+p2<-
+ggplot(redwine, aes(x=grade_number, y=sulphates,fill=grade_number)) + geom_boxplot()+
+   xlab("Wine Grade") + ylab("sulphates") +
+  ggtitle("Sulphatesy vs Wine Grade")
+p3<-
+ggplot(redwine, aes(x=grade_number, y=citric.acid,fill=grade_number)) + geom_boxplot()+
+   xlab("Wine Grade") + ylab("citric.acid") +
+  ggtitle("Citric Acid vs Wine Grade")
+grid.arrange(p1,p2,p3,ncol=1)
+
+```
 # Bivariate Analysis
 
 ### Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?
