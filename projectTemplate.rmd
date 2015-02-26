@@ -137,7 +137,15 @@ ggplot(aes(x = alcohol), data = redwine)+
 grid.arrange(p1,p2,p3,p4,ncol=2)
 
 
-volatile.acidity
+redwine$sqrt_alcohol=sqrt(redwine$alcohol)
+ggplot(aes(x = sqrt_alcohol), data = redwine)+
+  geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.05)
+
+redwine$log_alcohol=log(redwine$alcohol)
+ggplot(aes(x = log_alcohol), data = redwine)+
+  geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.05)
+
+
 
 ```
 
@@ -234,7 +242,7 @@ ggplot(redwine, aes(x=volatile.acidity, fill=sulphates)) +
   xlab("Wine Grade") + ylab("Volatile acidity") +
   ggtitle("Volatile Acidity Distribuiton of Differnt Wine Grade")
 
-grid.arrange(p2,ncol=1)
+grid.arrange(p1,p2,ncol=1)
 
 #multivariable
 p1<-

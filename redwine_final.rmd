@@ -100,6 +100,34 @@ Some observed on the distribution of the chemical property can be made:
 
 - **Long Tail**: residual.sugar, chlorides
 
+### Rescale Variables 
+The skewed and long tail data can be transformed toward more normally distribution by taking square root or log function of the data. 
+Take alcohol as a example we compare the original, square root and log of the feature.
+
+
+```{r echo=FALSE, feature_scale}
+# original 
+p1<-
+ggplot(aes(x = sulphates), data = redwine)+
+  geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.1)
+# square root
+
+redwine$sqrt_sulphates=sqrt(redwine$sulphates)
+p2<-
+ggplot(aes(x = sqrt_sulphates), data = redwine)+
+  geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.05)
+#log
+
+redwine$log_sulphates=log(redwine$sulphates)
+p3<-
+ggplot(aes(x = log_sulphates), data = redwine)+
+  geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.1)
+
+grid.arrange(p1,p2,p3,ncol=1)
+```
+The square root helps a little bit, the log scale is more normal distributed
+
+
 
 # Bivariate Plots Section
 
@@ -175,7 +203,57 @@ ggplot(redwine, aes(x=grade_number, y=citric.acid,fill=grade_number)) + geom_box
 grid.arrange(p1,p2,p3,ncol=1)
 
 ```
-# Bivariate Analysis
+### Bivariate Analysis
+
+```{r echo=FALSE, alchool_distribution_grade}
+  ggplot(redwine, aes(x=alcohol, fill=grade_number)) +
+  geom_histogram(binwidth=.5, alpha=.5, position="identity")
+```
+Notes that the data size is not normailize
+
+```{r echo=FALSE, alchool_distribution_grade_normalized}
+ ggplot(redwine, aes(x=alcohol, fill=grade_number)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Alchohol Distribuiton of Differnt Wine Grade")
+```
+The plot looks a little busy. We ground 2 grade together
+
+```{r echo=FALSE, grouping}
+ #3,4 low 5,6,medium 7,8high
+redwine$grade<-cut(redwine$quality, c(2.5,4.5,6.5,8.5),labels=c('Low','Medium','High'))
+ggplot(redwine, aes(x=alcohol, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Alchohol Distribuiton of Differnt Wine Grade")
+```
+this looks better
+
+```{r echo=FALSE, more_distribution_grade}
+ggplot(redwine, aes(x=volatile.acidity, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Wine Grade") + ylab("Volatile Acidity") +
+  ggtitle("Volatile Acidity Distribuiton of Differnt Wine Grade")
+
+ggplot(redwine, aes(x=citric.acid, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Wine Grade") + ylab("Citric Acid") +
+  ggtitle("Citric Acid Distribuiton of Differnt Wine Grade")
+```
+
+skewed, we use log
+```{r echo=FALSE, log_sulphates}
+
+ggplot(redwine, aes(x=sulphates, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Wine Grade") + ylab("sulphates") +
+  ggtitle("Sulphates Distribuiton of Differnt Wine Grade")
+
+ggplot(redwine, aes(x=log_sulphates, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Wine Grade") + ylab("log_sulphates") +
+  ggtitle("Sulphates Distribuiton of Differnt Wine Grade")
+```
 
 ### Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?
 
@@ -188,11 +266,42 @@ grid.arrange(p1,p2,p3,ncol=1)
 
 # Multivariate Plots Section
 
+we x-y color to represent the other variable, how to encode dimension into the plot
+
 ```{r echo=FALSE, Multivariate_Plots}
+  ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) )+
+  geom_point(alpha=1/4,size=3)+
+  scale_colour_gradient2(low="red", high="blue",mid="#9933CC",midpoint = 0.8)
 
 ```
 
-# Multivariate Analysis
+is discrete number, problems of over plot, jitter
+```{r echo=FALSE, jitter_Plots}
+  ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) )+
+  geom_jitter(alpha=1/2,size=3)+
+  scale_colour_gradient2(low="red", high="blue",mid="#9933CC",midpoint = 0.8)
+
+```
+
+use the 3 biggest factors
+```{r echo=FALSE, facet}
+
+ggplot(redwine, aes(x=alcohol,y=volatile.acidity)) +
+  geom_point(aes(color =  log_sulphates),alpha=1/2,size=3)+
+  scale_colour_gradient2(low="red", high="blue",mid="#9933CC",midpoint = -0.25)+
+  facet_grid(grade ~ .) 
+```
+
+```{r echo=FALSE, grade_as}
+
+ggplot(aes(x = volatile.acidity, y = alcohol), data = redwine) +
+  geom_point(aes(color =  grade),size=2,)
+
+ggplot(aes(x = log_sulphates, y = citric.acid), data = redwine) +
+  geom_point(aes(color =  grade))
+```
+
+### Multivariate Analysis
 
 ### Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
 
