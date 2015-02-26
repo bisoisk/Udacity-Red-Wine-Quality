@@ -1,4 +1,6 @@
 TITLE by YOUR_NAME_HERE
+What Makes Red Wine Great?
+Exploratory Data Analysis Using R by Darui Zhang
 ========================================================
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
@@ -10,15 +12,34 @@ TITLE by YOUR_NAME_HERE
 # You should set echo=FALSE for all code chunks in your file.
 
 library(ggplot2)
+library(GGally)
+library(scales)
+library(memisc)
+library(lattice)
+library(MASS)
 ```
 
 ```{r echo=FALSE, Load_the_Data}
 # Load the Data
+redwine<-read.csv('wineQualityReds.csv')
+names(redwine)
+
+```
+
+# A First Glance at the Data
+```{r echo=FALSE, First_Glance}
+#1 pair
+ggpairs(redwine,params=c(shape=I('.'),outlier.shap=I('.')))
 
 ```
 
 # Univariate Plots Section
 ```{r echo=FALSE, Univariate_Plots}
+ggplot(aes(x = quality), data = redwine)+
+  geom_bar(colour="black", fill="#993366", width=.7,binwidth = 1)+
+  scale_x_discrete("Wine Grade")+
+  xlab("Wine Grade") + ylab("Count") +
+  ggtitle("Distribution of Wine Grade")
 
 ```
 
@@ -38,7 +59,21 @@ library(ggplot2)
 
 # Bivariate Plots Section
 ```{r echo=FALSE, Bivariate_Plots}
+ggplot(aes(x=quality,y=alcohol),data=redwine)+
+  geom_point()
 
+# add alpha, and 0.1, 0.5, 0.9 percentile line
+ggplot(aes(x=quality,y=alcohol),data=redwine)+
+  geom_point(color='#993366',alpha=1/4)+
+  geom_line(stat='summary',fun.y = quantile,probs = .5,color='#FF6660')+
+  geom_line(stat='summary',fun.y = quantile,probs = .9,
+            linetype =2, color='#FF6660')+
+  geom_line(stat='summary',fun.y = quantile,probs = .1,
+            linetype =2, color='#FF6660')+
+  xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Wine Qaulity and Alchohol")
+
+# other varialbes
 ```
 
 # Bivariate Analysis
@@ -55,6 +90,35 @@ library(ggplot2)
 # Multivariate Plots Section
 
 ```{r echo=FALSE, Multivariate_Plots}
+
+# turn quality  into categroical 3,4 low 5,6,medium 7,8high
+redwine$grade<-cut(redwine$quality, c(2.5,4.5,6.5,8.5),labels=c('Low','Medium','High'))
+# box plot
+ggplot(redwine, aes(x=grade, y=alcohol,fill=grade)) + geom_boxplot()
+
+ggplot(redwine, aes(x=alcohol, fill=grade)) +
+  geom_histogram(binwidth=.5, alpha=.5, position="identity")
+
+# Overlaid histograms with means
+ggplot(redwine, aes(x=alcohol, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Wine Qaulity and Alchohol")
+
+ggplot(redwine, aes(x=alcohol, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Wine Qaulity and Alchohol")
+
+ggplot(redwine, aes(x=alcohol, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Wine Qaulity and Alchohol")
+
+ggplot(redwine, aes(x=alcohol, fill=grade)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Wine Qaulity and Alchohol")
 
 ```
 

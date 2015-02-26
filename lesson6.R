@@ -17,6 +17,11 @@ library(ggplot2)
 library(GGally)
 library(scales)
 library(memisc)
+library(lattice)
+library(MASS)
+
+
+
 
 #sample 10,000
 set.seed(20022012)

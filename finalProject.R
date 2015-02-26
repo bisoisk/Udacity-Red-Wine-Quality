@@ -26,7 +26,9 @@ setwd("~/Documents/Github/Red-wine-quality")
 # 20
 
 library(ggplot2)
-library(memsic)
+library(GGally)
+library(scales)
+library(memisc)
 
 redwine<-read.csv('wineQualityReds.csv')
 names(redwine)
@@ -52,10 +54,14 @@ ggplot(aes(x=quality,y=sulphates),data=redwine)+
 
 #4 add mean and variance
 ggplot(aes(x=quality,y=alcohol),data=redwine)+
-  geom_point(color='#F79420',alpha=1/4)+
-  geom_line(stat='summary',fun.y = mean)+
-  geom_line(stat='summary',fun.y = quantile,probs = .5,
-            linetype =2, color='blue')
+  geom_point(color='#993366',alpha=1/4)+
+  geom_line(stat='summary',fun.y = quantile,probs = .5,color='#FF6660')+
+  geom_line(stat='summary',fun.y = quantile,probs = .9,
+            linetype =2, color='#FF6660')+
+  geom_line(stat='summary',fun.y = quantile,probs = .1,
+            linetype =2, color='#FF6660')+
+  xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Wine Qaulity and Alchohol")
 
 
 #5 sulphates
@@ -186,7 +192,14 @@ position=position_dodge()) # Put bars side-by-side instead of stacked
 # regression
 m1<-lm(quality ~ volatile.acidity,data=redwine)
 m2<-update(m1,~. + alcohol)
-mtable(m1,m2)
+m3<-update(m2,~. + sulphates)
+m4<-update(m3,~. + citric.acid)
+m5<-update(m4,~. + chlorides)
+m6<-update(m5,~. + total.sulfur.dioxide)
+m7<-update(m6,~. + density)
+mtable(m1,m2,m3,m4,m5,m6,m7)
+
+# AIC m6 is the best
 
 # reference
 # http://en.wikipedia.org/wiki/Wine_fault
