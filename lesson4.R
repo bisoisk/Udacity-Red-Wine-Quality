@@ -46,6 +46,7 @@ ggplot(aes(x=age,y=friend_count),data=pf)+
             linetype =2, color='blue')+
   geom_line(stat='summary',fun.y=quantile, probs = .5,
              color='blue')
+
 #plot quantrio of the data
 # correlation 
 cor.test(pf$age, pf$friend_count,method='pearson')    

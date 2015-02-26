@@ -17,6 +17,9 @@ library(scales)
 library(memisc)
 library(lattice)
 library(MASS)
+library(gridExtra)
+library(dplyr)
+library(reshape)
 ```
 
 ```{r echo=FALSE, Load_the_Data}
@@ -40,6 +43,83 @@ ggplot(aes(x = quality), data = redwine)+
   scale_x_discrete("Wine Grade")+
   xlab("Wine Grade") + ylab("Count") +
   ggtitle("Distribution of Wine Grade")
+
+redwine.median<-redwine %>%
+  #  filter(!is.na(gender))%>%
+  group_by(quality)%>%
+  summarise(alcohol = median(alcohol),
+            volatile.acidity = median(volatile.acidity),
+            sulphates = median(sulphates),
+            citric.acid = median(citric.acid),
+            n=n()) %>%
+  ungroup() %>%
+  arrange(quality)
+
+redwine.median$alcohol=redwine.median$alcohol/max(redwine.median$alcohol)
+redwine.median$volatile.acidity=redwine.median$volatile.acidity/max(redwine.median$volatile.acidity)
+redwine.median$sulphates=redwine.median$sulphates/max(redwine.median$sulphates)
+redwine.median$citric.acid=redwine.median$citric.acid/max(redwine.median$citric.acid)
+
+
+install.packages("reshape")
+library(reshape)
+re_arranged<-melt(redwine.median, id.vars = "quality", measure.vars = c("alcohol", "volatile.acidity", "sulphates","citric.acid"), variable_name = "abcValues")
+
+
+library(ggplot2) 
+
+ggplot(re_arranged, aes(x=quality, y=value)) + 
+    geom_bar(aes(fill=abcValues),   # fill depends on cond2
+             colour="black",  stat="identity",  # Black outline for all
+             position=position_dodge()) # Put bars side-by-side instead of stacked
+
+# Equivalent to above; but move "colour=cond2" into the global aes() mapping
+ggplot(re_arranged, aes(x=quality, y=value, colour=abcValues)) + 
+    geom_line(aes(group=abcValues)) +
+    geom_point(size=3)     
+  
+
+redwine.median2<-redwine %>%
+  #  filter(!is.na(gender))%>%
+  group_by(quality)%>%
+  summarise(fixed.acidity = median(fixed.acidity),
+            volatile.acidity = median(volatile.acidity),
+            citric.acid = median(citric.acid),
+            residual.sugar = median(residual.sugar),
+            chlorides = median(chlorides),
+            free.sulfur.dioxide = median(free.sulfur.dioxide),
+            total.sulfur.dioxide = median(total.sulfur.dioxide),
+            density = median(density),
+            pH = median(pH),
+            sulphates = median(sulphates),
+            alcohol = median(alcohol),
+            n=n()) %>%
+  ungroup() %>%
+  arrange(quality)
+
+  redwine.median2$fixed.acidity=redwine.median2$fixed.acidity/max(redwine.median2$fixed.acidity)
+  redwine.median2$volatile.acidity=redwine.median2$volatile.acidity/max(redwine.median2$volatile.acidity)
+  redwine.median2$citric.acid=redwine.median2$citric.acid/max(redwine.median2$citric.acid)
+  redwine.median2$residual.sugar=redwine.median2$residual.sugar/max(redwine.median2$residual.sugar)
+  redwine.median2$chlorides=redwine.median2$chlorides/max(redwine.median2$chlorides)
+  redwine.median2$pH=redwine.median2$pH/max(redwine.median2$pH)
+  redwine.median2$free.sulfur.dioxide=redwine.median2$free.sulfur.dioxide/max(redwine.median2$free.sulfur.dioxide)
+  redwine.median2$total.sulfur.dioxide=redwine.median2$total.sulfur.dioxide/max(redwine.median2$total.sulfur.dioxide)
+  redwine.median2$density=redwine.median2$density/max(redwine.median2$density)
+  redwine.median2$pH=redwine.median2$pH/max(redwine.median2$pH)
+  redwine.median2$sulphates=redwine.median2$sulphates/max(redwine.median2$sulphates)
+  redwine.median2$alcohol=redwine.median2$alcohol/max(redwine.median2$alcohol)
+
+re_arranged2<-melt(redwine.median2, id.vars = "quality", measure.vars = c("fixed.acidity", "volatile.acidity","citric.acid","residual.sugar","chlorides","free.sulfur.dioxide","total.sulfur.dioxide","density","pH","sulphates","alcohol"), variable_name = "abcValues")
+
+ggplot(re_arranged2, aes(x=quality, y=value, colour=abcValues)) + 
+    geom_line(aes(group=abcValues)) +
+    geom_point(size=3)    
+
+
+
+
+
 
 ```
 
@@ -75,7 +155,7 @@ ggplot(aes(x=quality,y=alcohol),data=redwine)+
 
 # other varialbes
 ```
-
+median$alcohol
 # Bivariate Analysis
 
 ### Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?
@@ -91,34 +171,75 @@ ggplot(aes(x=quality,y=alcohol),data=redwine)+
 
 ```{r echo=FALSE, Multivariate_Plots}
 
-# turn quality  into categroical 3,4 low 5,6,medium 7,8high
+# turn quality  into categroical 
+redwine$grade_number<-cut(redwine$quality, c(2.5,3.5,4.5,5.5,6.5,7.5,8.5),labels=c('3','4','5','6','7','8'))
+ggplot(redwine, aes(x=alcohol, fill=grade_number)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+  xlab("Alcohol") + ylab("Frequency") +
+  ggtitle("Alchohol Distribuiton of Differnt Wine Grade")
+
+# box plot
+ggplot(redwine, aes(x=grade_number, y=alcohol,fill=grade_number)) + geom_boxplot()+
+   xlab("Wine Grade") + ylab("Alcohol") +
+  ggtitle("Alchohol Level of Differnt Wine Grade")
+
+#3,4 low 5,6,medium 7,8high
 redwine$grade<-cut(redwine$quality, c(2.5,4.5,6.5,8.5),labels=c('Low','Medium','High'))
 # box plot
-ggplot(redwine, aes(x=grade, y=alcohol,fill=grade)) + geom_boxplot()
+p1<-
+ggplot(redwine, aes(x=grade_number, y=alcohol,fill=grade_number)) + geom_boxplot()
+p2<-
+ggplot(redwine, aes(x=grade_number, y=volatile.acidity,fill=grade_number)) + geom_boxplot()
+grid.arrange(p1,p2,ncol=1)
 
+
+#not normailzied
 ggplot(redwine, aes(x=alcohol, fill=grade)) +
   geom_histogram(binwidth=.5, alpha=.5, position="identity")
 
 # Overlaid histograms with means
-ggplot(redwine, aes(x=alcohol, fill=grade)) +
-  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
-  xlab("Wine Grade") + ylab("Alcohol") +
-  ggtitle("Wine Qaulity and Alchohol")
 
 ggplot(redwine, aes(x=alcohol, fill=grade)) +
   geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
   xlab("Wine Grade") + ylab("Alcohol") +
-  ggtitle("Wine Qaulity and Alchohol")
+  ggtitle("Alchohol Distribuiton of Differnt Wine Grade")
 
-ggplot(redwine, aes(x=alcohol, fill=grade)) +
+p1<-
+ggplot(redwine, aes(x=volatile.acidity, fill=grade)) +
   geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
-  xlab("Wine Grade") + ylab("Alcohol") +
-  ggtitle("Wine Qaulity and Alchohol")
+  xlab("Wine Grade") + ylab("Volatile acidity") +
+  ggtitle("Volatile Acidity Distribuiton of Differnt Wine Grade")
 
-ggplot(redwine, aes(x=alcohol, fill=grade)) +
+p2<-
+ggplot(redwine, aes(x=volatile.acidity, fill=sulphates)) +
   geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
-  xlab("Wine Grade") + ylab("Alcohol") +
-  ggtitle("Wine Qaulity and Alchohol")
+  xlab("Wine Grade") + ylab("Volatile acidity") +
+  ggtitle("Volatile Acidity Distribuiton of Differnt Wine Grade")
+
+grid.arrange(p2,ncol=1)
+
+#multivariable
+p1<-
+ggplot(aes(x = volatile.acidity, y = alcohol), data = redwine) +
+  geom_point(aes(color =  grade))
+p2<-
+ggplot(aes(x = sulphates, y = citric.acid), data = redwine) +
+  geom_point(aes(color =  grade))
+grid.arrange(p1,p2,ncol=1)
+
+
+
+
+ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) )+
+  geom_point(alpha=1/2)+
+  scale_colour_gradient2(low="red", high="blue",mid="#9933CC",midpoint = 0.8)
+
+ ggplot(redwine, aes(x=alcohol)) +
+  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
+   # geom_histogram(colour="black") +
+    facet_grid(grade ~ .) +
+    ggtitle("Final weight, by diet") +
+    theme(legend.position="none")  
 
 ```
 

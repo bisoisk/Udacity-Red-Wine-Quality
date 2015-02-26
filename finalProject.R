@@ -180,7 +180,6 @@ redwine.median_by_quality<-redwine %>%
             n=n()) %>%
   ungroup() %>%
   arrange(quality)
-stat='summary',fun.y = mean
 
 # Bars with other dataset; fill depends on cond2
 ggplot(top_wine, aes(x=grade_number) )+ 
@@ -198,8 +197,30 @@ m5<-update(m4,~. + chlorides)
 m6<-update(m5,~. + total.sulfur.dioxide)
 m7<-update(m6,~. + density)
 mtable(m1,m2,m3,m4,m5,m6,m7)
-
 # AIC m6 is the best
+
+
+redwine$calculated_grade=( -1.103656)*redwine$volatile.acidity+ (0.276431)*redwine$alcohol+ 0.908496*redwine$sulphates+0.065345*redwine$citric.acid+ (-1.762748)*redwine$chlorides+ -0.002338*redwine$total.sulfur.dioxide+2.984530 
+
+library(scales) # 
+ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) ) 
+  geom_point()
+  scale_colour_gradient2(low="red", high="blue")
+
 
 # reference
 # http://en.wikipedia.org/wiki/Wine_fault
+
+N <- 100
+x1 <- rnorm(N)
+x2 <- 1 + rnorm(N) + x1
+x3 <- rnorm(N) + x2
+mydat <- data.frame(x1,x2,x3)
+
+
+
+messy <- data.frame(
+  name = c("Wilbur", "Petunia", "Gregory"),
+  a = c(67, 80, 64),
+  b = c(56, 90, 50)
+)
