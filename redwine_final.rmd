@@ -1,7 +1,7 @@
 Red Wine Exploration by Darui Zhang
 ========================================================
 
-What property makes great red wine great? In this project we try to answer this question by exploring the red wine data set. 
+What property makes good red wine? In this project we try to answer this question by exploring the red wine data set. 
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 # Load all of the packages that you end up using
@@ -94,7 +94,7 @@ grid.arrange(p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,ncol=3)
 
 ### Univariate Analysis
 
-Some observed on the distribution of the chemical property can be made:
+Some observation on the distribution of the chemical property can be made:
 
 - **Normal**:  Volatile acidity, Density, PH
 
@@ -104,7 +104,7 @@ Some observed on the distribution of the chemical property can be made:
 
 ### Rescale Variable
 
-The skewed and long tail data can be transformed toward more normally distribution by taking square root or log function. 
+Skewed and long tail data can be transformed toward more normally distribution by taking square root or log function. 
 Take Sulphates as a example, we compare the original, square root and log of the feature.
 
 ```{r echo=FALSE,  Rescale_Variable}
@@ -142,7 +142,7 @@ ggpairs(redwine,params=c(shape=I('.'),outlier.shap=I('.')))
 
 ```
 
-The top 4 factor that is correlated with the wine quality (with a correlation value greater than 0.2)
+The top 4 factors that is correlated with the wine quality (with a correlation coeffcient greater than 0.2)
 
 | Property         | r-value |
 |------------------|---------|
@@ -185,7 +185,7 @@ Since the wine quality are desecrate value, we can transform it from numerical d
 redwine$grade_number<-cut(redwine$quality, c(2.5,3.5,4.5,5.5,6.5,7.5,8.5),labels=c('3','4','5','6','7','8'))
 ```
 
-Higher quality wine have higher alcholol content in generally.
+Higher quality wine tend to have higher alcholol content.
 ```{r echo=FALSE, Alcholo_Boxplot}
 ggplot(redwine, aes(x=grade_number, y=alcohol,fill=grade_number)) + geom_boxplot()+
    xlab("Wine Grade") + ylab("Alcohol") +
@@ -217,7 +217,7 @@ ggplot(redwine, aes(x=grade_number, y=citric.acid,fill=grade_number)) +
 
 ### Distribution Analysis
 
-In this analysis, we try to find if the distribution of the chemical properties are different in each wine quality.
+In this analysis, we try to find out if the distribution of the chemical properties are different at different wine grade.
 
 ```{r echo=FALSE, Alchool_Grade}
   ggplot(redwine, aes(x=alcohol, fill=grade_number)) +
@@ -235,7 +235,7 @@ A normalized plot is shown below.
   ggtitle("Alchohol Distribuiton of Differnt Wine Grade")
 ```
 
-The plot looks a little busy. We ground 2 grade together: grade 3,4 as "Low", grade 5,6 as "Medium", grade 7,8 as "High". And plot again.
+The plot looks a little busy. We group 2 grade together: grade 3,4 as "Low", grade 5,6 as "Medium", grade 7,8 as "High". And plot again.
 
 ```{r echo=FALSE, Regroup}
  #3,4 low 5,6,medium 7,8high
@@ -249,7 +249,7 @@ ggplot(redwine, aes(x=alcohol, fill=grade)) +
 
 The new plot looks cleaner.
 
-Similar analysis was done the 3 other factors: volatile acidity, sulphates and citric.acid
+Similar analysis was done on the 3 other factors: volatile acidity, sulphates and citric acid.
 
 ```{r echo=FALSE, More_Distribution_Grade}
 ggplot(redwine, aes(x=volatile.acidity, fill=grade)) +
@@ -279,10 +279,14 @@ ggplot(redwine, aes(x=log_sulphates, fill=grade)) +
   ggtitle("Sulphates Distribuiton of Differnt Wine Grade")
 ```
 
-The log scaled feature looks better.
+The log scaled feature looks more spread out and therefore preferable.
 
 
 ### Median Value of Each Chemical Properties
+
+The median value of chemical properties at each wine quality is  shown. The value is normalize by the  maximum value so that all the values ranges from 0 to 1.
+
+
 ```{r echo=FALSE, Rearrange}
   # rearrange the data on midian values
   redwine.median<-redwine %>%
@@ -338,6 +342,8 @@ ggplot(re_arranged2, aes(x=quality, y=value, colour=properties)) +
     geom_point(size=3)  
 
 ```
+
+The 4 features that has the strongest correlation to the wine quality.
 
 ```{r echo=FALSE, Median_Key}
 
