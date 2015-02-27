@@ -446,7 +446,9 @@ The features are selected incrementally in order of how strong the correlation b
 
 The model of 6 features has the lowest AIC (Akaike information criterion) number. As the number of features increasing the AIC becomes higher. The parameter of the predictor also changed dramatically which shows a sign of overfitting.
 
-The model can be described as: wine_quality = 2.985 + 0.276xalcohol - 2.985xvolatile.acidity + 0.908xsulphates + 0.065xcitric.acid - -1.763*chlorides - 0.002xtotal.sulfur.dioxide 
+The model can be described as:
+
+wine_quality = 2.985 + 0.276xalcohol - 2.985xvolatile.acidity + 0.908xsulphates + 0.065xcitric.acid - -1.763*chlorides - 0.002xtotal.sulfur.dioxide 
 
 ------
 
