@@ -304,18 +304,18 @@ The log scaled feature looks better.
   arrange(quality)
 
 # normailize with maxium value
-redwine.median2$fixed.acidity=redwine.median2$fixed.acidity/max(redwine.median2$fixed.acidity)
-redwine.median2$volatile.acidity=redwine.median2$volatile.acidity/max(redwine.median2$volatile.acidity)
-redwine.median2$citric.acid=redwine.median2$citric.acid/max(redwine.median2$citric.acid)
-redwine.median2$residual.sugar=redwine.median2$residual.sugar/max(redwine.median2$residual.sugar)  
-redwine.median2$chlorides=redwine.median2$chlorides/max(redwine.median2$chlorides)
-redwine.median2$pH=redwine.median2$pH/max(redwine.median2$pH)
-redwine.median2$free.sulfur.dioxide=redwine.median2$free.sulfur.dioxide/max(redwine.median2$free.sulfur.dioxide)
-redwine.median2$total.sulfur.dioxide=redwine.median2$total.sulfur.dioxide/max(redwine.median2$total.sulfur.dioxide)
-redwine.median2$density=redwine.median2$density/max(redwine.median2$density)
-redwine.median2$pH=redwine.median2$pH/max(redwine.median2$pH)
-redwine.median2$sulphates=redwine.median2$sulphates/max(redwine.median2$sulphates)
-redwine.median2$alcohol=redwine.median2$alcohol/max(redwine.median2$alcohol)
+redwine.median$fixed.acidity=redwine.median$fixed.acidity/max(redwine.median$fixed.acidity)
+redwine.median$volatile.acidity=redwine.median$volatile.acidity/max(redwine.median$volatile.acidity)
+redwine.median$citric.acid=redwine.median$citric.acid/max(redwine.median$citric.acid)
+redwine.median$residual.sugar=redwine.median$residual.sugar/max(redwine.median$residual.sugar)  
+redwine.median$chlorides=redwine.median$chlorides/max(redwine.median$chlorides)
+redwine.median$pH=redwine.median$pH/max(redwine.median$pH)
+redwine.median$free.sulfur.dioxide=redwine.median$free.sulfur.dioxide/max(redwine.median$free.sulfur.dioxide)
+redwine.median$total.sulfur.dioxide=redwine.median$total.sulfur.dioxide/max(redwine.median$total.sulfur.dioxide)
+redwine.median$density=redwine.median$density/max(redwine.median$density)
+redwine.median$pH=redwine.median$pH/max(redwine.median$pH)
+redwine.median$sulphates=redwine.median$sulphates/max(redwine.median$sulphates)
+redwine.median$alcohol=redwine.median$alcohol/max(redwine.median$alcohol)
 
 ```
 

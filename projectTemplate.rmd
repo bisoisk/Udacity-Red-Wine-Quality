@@ -117,7 +117,7 @@ ggplot(re_arranged2, aes(x=quality, y=value, colour=abcValues)) +
     geom_point(size=3)    
 
 save(re_arranged, file="re_arranged.RData")
-save(re_arranged, file="re_arranged2.RData")
+save(re_arranged2, file="re_arranged2.RData")
 
 # histogram
 
