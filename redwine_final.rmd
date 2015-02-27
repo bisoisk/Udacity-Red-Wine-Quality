@@ -375,7 +375,7 @@ cor.test(redwine$volatile.acidity, redwine$citric.acid,method='pearson')
 
 ### Main Chemical Property vs Wine Quality
 
-With different color, we can  add another dimension into the plot. There are 4 main features.Alcohol, volatile acidity are the top two factor that affect wine quality. 
+With different colors, we can  add another dimension into the plot. There are 4 main features.Alcohol, volatile acidity are the top two factor that affect wine quality. 
 
 ```{r echo=FALSE, Multivariate_Plots}
   ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) )+
@@ -384,7 +384,7 @@ With different color, we can  add another dimension into the plot. There are 4 m
 
 ```
 
-The figure looks over ploted, since the wine quality is discrete numbers. The use jitter plot to alleviate this problem
+The figure looks over ploted, since the wine quality are discrete numbers. We can use jitter plot to alleviate this problem
 
 ```{r echo=FALSE, Jitter_Plots}
   ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) )+
@@ -394,7 +394,7 @@ The figure looks over ploted, since the wine quality is discrete numbers. The us
 ```
 
 
-We can see higher quality wine have alcohol and lower volatile acidity.
+We can see higher quality wine have higher alcohol and lower volatile acidity.
 
 ### Add Another Feature 
 
@@ -408,7 +408,7 @@ ggplot(redwine, aes(x=alcohol,y=volatile.acidity)) +
   facet_grid(grade ~ .) 
 ```
 
-We can see higher quality wine have higher alcohol (x-axis), lower volatile acidity (y-axis) and higher sulphates.
+We can see higher quality wine have higher alcohol (x-axis), lower volatile acidity (y-axis) and higher sulphates (hue).
 
 ### Main Chemical Properties  vs Wine Quality
 
@@ -420,7 +420,7 @@ ggplot(aes(x = volatile.acidity, y = alcohol), data = redwine) +
   geom_point(aes(color =  grade),size=2)
 ```
 
-The same trend of alcholand volatile acidity's effect on wind qaulity can be observed.
+The same trend of alcholand volatile acidity's effect on wine qaulity can be observed.
 
 ```{r echo=FALSE, Main_Chemical_Property2}
 
@@ -432,7 +432,7 @@ We can see higher quality wine have higher sulphates (x-axis), higher citric aci
 
 # Linear Multivariable Model
 
-Linear Multivariable model was created to predict the wine quality based on chemical properties. 
+Linear multivariable model was created to predict the wine quality based on chemical properties. 
 
 The features are selected incrementally in order of how strong the correlation between this feature and wine quality.  
 
@@ -450,7 +450,7 @@ The features are selected incrementally in order of how strong the correlation b
 
 ```
 
-The model of 6 features has the lowest AIC (Akaike information criterion) number. As the number of features increasing the AIC becomes higher. The parameter of the predictor also changed dramatically which shows a sign of overfitting.
+The model of 6 features has the lowest AIC (Akaike information criterion) number. As the number of features increase the AIC becomes higher. The parameter of the predictor also changed dramatically which shows a sign of overfitting.
 
 The model can be described as:
 
@@ -464,7 +464,10 @@ wine_quality = 2.985 + 0.276xalcohol - 2.985xvolatile.acidity + 0.908xsulphates 
 ```{r echo=FALSE, Plot_One}
 ggplot(re_arranged2, aes(x=quality, y=value, colour=properties)) + 
     geom_line(aes(group=properties)) +
-    geom_point(size=3)  
+    geom_point(size=3)+
+    ggtitle("Median Value of Each Chemical Properties")
+
+
 
 ```
 
@@ -473,7 +476,7 @@ ggplot(re_arranged2, aes(x=quality, y=value, colour=properties)) +
 The median value of chemical properties at each wine quality is  shown. The value is normalize by the  maximum value so that all the values ranges from 0 to 1. The features with monotonically increasing or decreasing trends has higher correlation with the wine quality, such as volatile acidity.  Features that are flat or not monotonical have less correlation with wine quality, such s density and free sulfur dioxide.
 
 
-### Plot Two
+### Plot Two: 
 ```{r echo=FALSE, Plot_Two}
 p1<-
 ggplot(redwine, aes(x=grade, y=alcohol,fill=grade)) +
@@ -507,17 +510,23 @@ grid.arrange(p1,p2,p3,p4,ncol=2)
 
 ### Description Two
 
-The 4 features that have the highest correlation coefficient are alcohol(0.476), volatile acidity(-0.391), sulphates(0.251),citric acid(0.226). The wine quality are grouped to low (3,4) medium (5.6) and high(7,8). High quality wine have high alcohol level however, there is no significant different between medium and low quality wine. Volatile acidity decrease as wine quality increases. Sulphate and critic increase as wine quality increase.
+The 4 features that have the highest correlation coefficient are alcohol, volatile acidity, sulphates, citric acid. The wine quality are grouped to low (3,4) medium (5.6) and high (7,8). High quality wine have high alcohol level however, there is no significant different between medium and low quality wine. Volatile acidity decrease as wine quality increases. Sulphate and critic increase as wine quality increase.
 
 
 ### Plot Three
 ```{r echo=FALSE, Plot_Three}
 p1<-
 ggplot(aes(x = volatile.acidity, y = alcohol), data = redwine) +
-  geom_point(aes(color =  grade),size=2)
+  geom_point(aes(color =  grade),size=2)+
+  ggtitle("Volatile acidity and Alcohol")
+
+  
 p2<-
 ggplot(aes(x = log_sulphates, y = citric.acid), data = redwine) +
-  geom_point(aes(color =  grade),size=2)
+  geom_point(aes(color =  grade),size=2)+
+  ggtitle("Citric Acid and Sulphates")
+
+
 grid.arrange(p1,p2,ncol=1)
 
 
@@ -531,13 +540,13 @@ The 4 features are also represented in the scatter plot. 2 features are plotted 
 
 # Reflection
 
-The red dataset  contains 1,599 observation with 11 variables on the chemical properties. We are interested in the correlation between the features and wine quality. Unlike the diamond price,  which is the  dominated by their size or carat. The wine quality is more complex. It does not have a obvious driver. Most of the data visualization in this project was done on the 4 features that have the highest correlation coefficient: alcohol(0.476), volatile acidity(-0.391), sulphates(0.251),citric acid(0.226). After some web research, the reflection about these chemical component are as follows. 
+The red wine dataset  contains 1,599 observation with 11 variables on the chemical properties. We are interested in the correlation between the features and wine quality. Unlike the diamond price,  which is the  dominated by their size or carat. The wine quality is more complex. It does not have a obvious driver. Most of the data visualization in this project was done on the 4 features that have the highest correlation coefficient: alcohol(0.476), volatile acidity(-0.391), sulphates(0.251),citric acid(0.226). After some web research, the reflection about these chemical component are as follows. 
 
- - **Alcohol**: surprising and unsparingly, alcohol is the No.1 factor correlated to the wine quality. The data strongly suggest that the higher the alcohol content, the more likely the better wine quality. One suggestion is that wine of higher alcohol are made from riper grapes, which tend to have intense flavor. Therefore, the relation between alcohol and wine quality are more likely to be correlation rather than causation. There is also controversy about alcohol level. One article even says “high alcohol is a wine fault not a badge of honor”. [1][2]
+ - **Alcohol**: surprisingly and unsurprisingly, alcohol is the No.1 factor correlated to the wine quality. The data strongly suggest that the higher the alcohol content, the more likely the better wine quality. One suggestion is that wine of higher alcohol are made from riper grapes, which tend to have intense flavor. Therefore, the relation between alcohol and wine quality are more likely to be correlation rather than causation. There is also controversy about alcohol level. One article even says “high alcohol is a wine fault not a badge of honor”. [1][2]
 
- - **Volatile acidity**:  volatile acidity has a negative correlation to wine quality. Volatile acidity can contributed to acidic tastes which is often considered a wine faults.[3]
+ - **Volatile acidity**:  volatile acidity has a negative correlation to wine quality. Volatile acidity can contributed to acidic tastes which is often considered a wine fault.[3]
 
- - **Sulphates**: sulphates has a positive correlation with wine quality. It is often added by  winemakers to prevent spoilage. It is less likely that sulphates itself contribute to better taste or aroma. It present simply means the wine is less likely to be spoiled.[4]
+ - **Sulphates**: sulphates has a positive correlation with wine quality. It is often added by  winemakers to prevent spoilage. It is less likely that sulphates itself contribute to better taste or aroma. Its present simply means the wine is less likely to be spoiled.[4]
 
   - **Citic acids**: unlike volatile acid, citic acids has positive correlation with wine quality . Winemaker often add citric acid to give a “freshness” test. However it can also bring unwanted effects through bacteria metabolism.[5]
 
