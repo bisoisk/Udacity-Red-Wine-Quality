@@ -63,7 +63,7 @@ redwine.median$citric.acid=redwine.median$citric.acid/max(redwine.median$citric.
 
 install.packages("reshape")
 library(reshape)
-re_arranged<-melt(redwine.median, id.vars = "quality", measure.vars = c("alcohol", "volatile.acidity", "sulphates","citric.acid"), variable_name = "abcValues")
+re_arranged<-melt(redwine.median, id.vars = "quality", measure.vars = c("alcohol", "volatile.acidity", "sulphates","citric.acid"), variable_name = "properties")
 
 
 library(ggplot2) 
@@ -110,14 +110,14 @@ redwine.median2<-redwine %>%
   redwine.median2$sulphates=redwine.median2$sulphates/max(redwine.median2$sulphates)
   redwine.median2$alcohol=redwine.median2$alcohol/max(redwine.median2$alcohol)
 
-re_arranged2<-melt(redwine.median2, id.vars = "quality", measure.vars = c("fixed.acidity", "volatile.acidity","citric.acid","residual.sugar","chlorides","free.sulfur.dioxide","total.sulfur.dioxide","density","pH","sulphates","alcohol"), variable_name = "abcValues")
+re_arranged2<-melt(redwine.median2, id.vars = "quality", measure.vars = c("fixed.acidity", "volatile.acidity","citric.acid","residual.sugar","chlorides","free.sulfur.dioxide","total.sulfur.dioxide","density","pH","sulphates","alcohol"), variable_name = "properties")
 
 ggplot(re_arranged2, aes(x=quality, y=value, colour=abcValues)) + 
     geom_line(aes(group=abcValues)) +
     geom_point(size=3)    
 
 save(re_arranged, file="re_arranged.RData")
-save(re_arranged, file="re_arranged2.RData")
+save(re_arranged2, file="re_arranged2.RData")
 
 # histogram
 
