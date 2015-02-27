@@ -281,6 +281,72 @@ ggplot(redwine, aes(x=log_sulphates, fill=grade)) +
 
 The log scaled feature looks better.
 
+
+### Median Value of Each Chemical Properties
+```{r echo=FALSE, Rearrange}
+  # rearrange the data on midian values
+  redwine.median<-redwine %>%
+  #  filter(!is.na(gender))%>%
+  group_by(quality)%>%
+  summarise(fixed.acidity = median(fixed.acidity),
+            volatile.acidity = median(volatile.acidity),
+            citric.acid = median(citric.acid),
+            residual.sugar = median(residual.sugar),
+            chlorides = median(chlorides),
+            free.sulfur.dioxide = median(free.sulfur.dioxide),
+            total.sulfur.dioxide = median(total.sulfur.dioxide),
+            density = median(density),
+            pH = median(pH),
+            sulphates = median(sulphates),
+            alcohol = median(alcohol),
+            n=n()) %>%
+  ungroup() %>%
+  arrange(quality)
+
+# normailize with maxium value
+redwine.median2$fixed.acidity=redwine.median2$fixed.acidity/max(redwine.median2$fixed.acidity)
+redwine.median2$volatile.acidity=redwine.median2$volatile.acidity/max(redwine.median2$volatile.acidity)
+redwine.median2$citric.acid=redwine.median2$citric.acid/max(redwine.median2$citric.acid)
+redwine.median2$residual.sugar=redwine.median2$residual.sugar/max(redwine.median2$residual.sugar)  
+redwine.median2$chlorides=redwine.median2$chlorides/max(redwine.median2$chlorides)
+redwine.median2$pH=redwine.median2$pH/max(redwine.median2$pH)
+redwine.median2$free.sulfur.dioxide=redwine.median2$free.sulfur.dioxide/max(redwine.median2$free.sulfur.dioxide)
+redwine.median2$total.sulfur.dioxide=redwine.median2$total.sulfur.dioxide/max(redwine.median2$total.sulfur.dioxide)
+redwine.median2$density=redwine.median2$density/max(redwine.median2$density)
+redwine.median2$pH=redwine.median2$pH/max(redwine.median2$pH)
+redwine.median2$sulphates=redwine.median2$sulphates/max(redwine.median2$sulphates)
+redwine.median2$alcohol=redwine.median2$alcohol/max(redwine.median2$alcohol)
+
+```
+
+```{r echo=FALSE, Long_Table}
+# turn wide table to long table
+
+#install.packages("reshape")
+#re_arranged<-melt(redwine.median, id.vars = "quality", measure.vars = c("fixed.acidity", "volatile.acidity","citric.acid","residual.sugar","chlorides","free.sulfur.dioxide","total.sulfur.dioxide","density","pH","sulphates","alcohol"), variable_name = "abcValues")
+
+# Install the package has a conflict with ggplot and may cause the software to crush. So here we load the data instead. The data is processed using the commented code abrove.
+
+load("re_arranged.RData")
+load("re_arranged2.RData")
+
+```
+
+```{r echo=FALSE, Median}
+ggplot(re_arranged2, aes(x=quality, y=value, colour=properties)) + 
+    geom_line(aes(group=properties)) +
+    geom_point(size=3)  
+
+```
+
+```{r echo=FALSE, Median_Key}
+
+ggplot(re_arranged, aes(x=quality, y=value, colour=properties)) + 
+    geom_line(aes(group=properties)) +
+    geom_point(size=3)  
+
+```
+
 ### Correlation Between Features
 
 There is interesting correlaiton between two of the main features: Volatile acidity and Citric acid.
@@ -345,7 +411,7 @@ Since we can visualized 3 dimensions, including wine quality, at a time. Two gra
 ```{r echo=FALSE, Main_Chemical_Property}
 
 ggplot(aes(x = volatile.acidity, y = alcohol), data = redwine) +
-  geom_point(aes(color =  grade),size=3,)
+  geom_point(aes(color =  grade),size=2)
 ```
 
 The same trend of alcholand volatile acidity's effect on wind qaulity can be observed.
@@ -353,7 +419,7 @@ The same trend of alcholand volatile acidity's effect on wind qaulity can be obs
 ```{r echo=FALSE, Main_Chemical_Property2}
 
 ggplot(aes(x = log_sulphates, y = citric.acid), data = redwine) +
-  geom_point(aes(color =  grade),size=3,)
+  geom_point(aes(color =  grade),size=2)
 ```
 
 We can see higher quality wine have higher sulphates (x-axis), higher citric acidity (y-axis).
@@ -386,24 +452,9 @@ The model of 6 features has the lowest AIC (Akaike information criterion) number
 
 ### Plot One
 ```{r echo=FALSE, Plot_One}
-# original 
-p1<-
-  ggplot(aes(x = sulphates), data = redwine)+
-   geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.1)
-
-# square root
-redwine$sqrt_sulphates=sqrt(redwine$sulphates)
-p2<-
-    ggplot(aes(x = sqrt_sulphates), data = redwine)+
-     geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.05)
-
-#log
-redwine$log_sulphates=log(redwine$sulphates)
-p3<-
-   ggplot(aes(x = log_sulphates), data = redwine)+
-    geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.1)
-
-grid.arrange(p1,p2,p3,ncol=1)
+ggplot(re_arranged2, aes(x=quality, y=value, colour=properties)) + 
+    geom_line(aes(group=properties)) +
+    geom_point(size=3)  
 
 ```
 
@@ -412,6 +463,33 @@ grid.arrange(p1,p2,p3,ncol=1)
 
 ### Plot Two
 ```{r echo=FALSE, Plot_Two}
+p1<-
+ggplot(redwine, aes(x=grade, y=alcohol,fill=grade)) +
+  geom_boxplot()+
+   xlab("Wine Quality") + ylab("Alcohol") +
+   ggtitle("Alcohol vs Wine Grade")
+
+p2<-
+ggplot(redwine, aes(x=grade, y=volatile.acidity,fill=grade)) +
+  geom_boxplot()+
+  xlab("Wine Quality") + 
+  ylab("Volatile Acidity") +
+  ggtitle("Volatile Acidity vs Wine Grade")
+
+p3<-
+ggplot(redwine, aes(x=grade, y=sulphates,fill=grade)) +
+  geom_boxplot()+
+   xlab("Wine Quality") + ylab("sulphates") +
+   ggtitle("Sulphatesy vs Wine Grade")
+
+p4<-
+ggplot(redwine, aes(x=grade, y=citric.acid,fill=grade)) +
+  geom_boxplot()+
+   xlab("Wine Quality") + ylab("sulphates") +
+   ggtitle("Citric Acid vs Wine Grade")
+grid.arrange(p1,p2,p3,p4,ncol=2)
+
+
 
 ```
 
