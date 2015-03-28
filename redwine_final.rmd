@@ -46,9 +46,9 @@ The wine quality grade is a discrete number. It is ranged from 3 to 8. The media
 ```{r echo=FALSE, Quality_Distribution}
   ggplot(aes(x = quality), data = redwine)+
   geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 1)+
-  scale_x_discrete()+
-  xlab("Wine Grade") + ylab("Count") +
-  ggtitle("Distribution of Wine Grade")
+                 scale_x_discrete()+
+                xlab("wine grade") + ylab("count") +
+                ggtitle("Distribution of Wine Quality")
 
 ```
 
@@ -57,24 +57,30 @@ The wine quality grade is a discrete number. It is ranged from 3 to 8. The media
 ```{r echo=FALSE,  Other_Properties}
 p1<-
   ggplot(aes(x = fixed.acidity), data = redwine)+
+  xlab("fixed acidity")+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.5)
 p2<-
   ggplot(aes(x = volatile.acidity), data = redwine)+
+  xlab("volatile acidity")+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.05)
 p3<-
   ggplot(aes(x = citric.acid), data = redwine)+
+  xlab("citric acid")+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.05)
 p4<-
   ggplot(aes(x = residual.sugar), data = redwine)+
+  xlab("residual sugar")+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.4)
 p5<-
   ggplot(aes(x = chlorides), data = redwine)+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 0.025)
 p6<-
   ggplot(aes(x = free.sulfur.dioxide), data = redwine)+
+  xlab("free sulfur dioxide")+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 4)
 p7<-
   ggplot(aes(x = total.sulfur.dioxide), data = redwine)+
+  xlab("total sulfur dioxide")+
   geom_bar(colour="black", fill="#993366", width=.7,binwidth = 20)
 p8<-
   ggplot(aes(x = density), data = redwine)+
@@ -117,12 +123,14 @@ p1<-
 redwine$sqrt_sulphates=sqrt(redwine$sulphates)
 p2<-
     ggplot(aes(x = sqrt_sulphates), data = redwine)+
-     geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.05)
+    xlab("square root of sulphates")+
+    geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.05)
 
 #log
 redwine$log_sulphates=log(redwine$sulphates)
 p3<-
    ggplot(aes(x = log_sulphates), data = redwine)+
+    xlab("log of sulphates")+
     geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 0.1)
 
 grid.arrange(p1,p2,p3,ncol=1)
@@ -182,14 +190,18 @@ Since the wine quality are desecrate value, we can transform it from numerical d
 
 ```{r echo=FALSE, Transform_Quality}
 # turn quality into categroical 
-redwine$grade_number<-cut(redwine$quality, c(2.5,3.5,4.5,5.5,6.5,7.5,8.5),labels=c('3','4','5','6','7','8'))
+redwine$grade_number<-cut(redwine$quality, 
+                          c(2.5,3.5,4.5,5.5,6.5,7.5,8.5),
+                          labels=c('3','4','5','6','7','8'))
 ```
 
 Higher quality wine tend to have higher alcholol content.
 ```{r echo=FALSE, Alcholo_Boxplot}
-ggplot(redwine, aes(x=grade_number, y=alcohol,fill=grade_number)) + geom_boxplot()+
-   xlab("Wine Grade") + ylab("Alcohol") +
-    ggtitle("Alchohol vs Wine Grade")
+ggplot(redwine, 
+       aes(x=grade_number, y=alcohol,fill=grade_number)) + 
+       geom_boxplot()+
+       xlab("wine grade") + ylab("alcohol") +
+       ggtitle("Alchohol vs Wine Grade")
 ```
 
 
@@ -197,21 +209,24 @@ Similar analysis was done the 3 other factors: volatile acidity, sulphates and c
 
 ```{r echo=FALSE, More_Boxplot}
 
-ggplot(redwine, aes(x=grade_number, y=volatile.acidity,fill=grade_number)) +
-  geom_boxplot()+
-  xlab("Wine Quality") + 
-  ylab("Volatile Acidity") +
-  ggtitle("Volatile Acidity vs Wine Grade")
+ggplot(redwine, 
+       aes(x=grade_number, y=volatile.acidity,fill=grade_number)) +
+       geom_boxplot()+
+       xlab("wine quality") + 
+       ylab("volatile acidity") +
+       ggtitle("Volatile Acidity vs Wine Grade")
 
-ggplot(redwine, aes(x=grade_number, y=sulphates,fill=grade_number)) +
-  geom_boxplot()+
-   xlab("Wine Quality") + ylab("sulphates") +
-   ggtitle("Sulphatesy vs Wine Grade")
+ggplot(redwine, 
+       aes(x=grade_number, y=sulphates,fill=grade_number)) +
+       geom_boxplot()+
+       xlab("wine quality") + ylab("sulphates") +
+       ggtitle("Sulphatesy vs Wine Grade")
 
-ggplot(redwine, aes(x=grade_number, y=citric.acid,fill=grade_number)) + 
-   geom_boxplot()+
-   xlab("Wine Quality") + ylab("citric.acid") +
-   ggtitle("Citric Acid vs Wine Grade")
+ggplot(redwine, 
+       aes(x=grade_number, y=citric.acid,fill=grade_number)) + 
+       geom_boxplot()+
+       xlab("wine quality") + ylab("citric acid") +
+       ggtitle("Citric Acid vs Wine Grade")
 
 ```
 
@@ -221,7 +236,8 @@ In this analysis, we try to find out if the distribution of the chemical propert
 
 ```{r echo=FALSE, Alchool_Grade}
   ggplot(redwine, aes(x=alcohol, fill=grade_number)) +
-  geom_histogram(binwidth=.5, alpha=.5, position="identity")
+        geom_histogram(binwidth=.5, alpha=.5, position="identity")
+
 ```
 
 Note that sine the data size for each quality is not equal, the distribution of higher and lower grades are hard to see. 
@@ -230,8 +246,9 @@ A normalized plot is shown below.
 
 ```{r echo=FALSE, Alchool_Grade_Normalized}
  ggplot(redwine, aes(x=alcohol, fill=grade_number)) +
-  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
-  xlab("Wine Grade") + ylab("Alcohol") +
+  geom_density(aes(y=..density..),
+               binwidth=.5, alpha=.5, position="identity")+
+  xlab("wine grade") + ylab("alcohol") +
   ggtitle("Alchohol Distribuiton of Differnt Wine Grade")
 ```
 
@@ -239,11 +256,14 @@ The plot looks a little busy. We group 2 grade together: grade 3,4 as "Low", gra
 
 ```{r echo=FALSE, Regroup}
  #3,4 low 5,6,medium 7,8high
-redwine$grade<-cut(redwine$quality, c(2.5,4.5,6.5,8.5),labels=c('Low','Medium','High'))
+redwine$grade<-cut(redwine$quality, c(2.5,4.5,6.5,8.5),
+                   labels=c('Low','Medium','High'))
 
 ggplot(redwine, aes(x=alcohol, fill=grade)) +
-  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
-  xlab("Wine Grade") + ylab("Alcohol") +
+  geom_density(aes(y=..density..),binwidth=.5, 
+               alpha=.5, 
+               position="identity")+
+  xlab("wine grade") + ylab("alcohol") +
   ggtitle("Alchohol Distribuiton of Differnt Wine Grade")
 ```
 
@@ -253,13 +273,15 @@ Similar analysis was done on the 3 other factors: volatile acidity, sulphates an
 
 ```{r echo=FALSE, More_Distribution_Grade}
 ggplot(redwine, aes(x=volatile.acidity, fill=grade)) +
-  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
-  xlab("Wine Grade") + ylab("Volatile Acidity") +
+  geom_density(aes(y=..density..),
+               binwidth=.5, alpha=.5, position="identity")+
+  xlab("wine grade") + ylab("volatile acidity") +
   ggtitle("Volatile Acidity Distribuiton of Differnt Wine Grade")
 
 ggplot(redwine, aes(x=citric.acid, fill=grade)) +
-  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
-  xlab("Wine Grade") + ylab("Citric Acid") +
+  geom_density(aes(y=..density..),
+               binwidth=.5, alpha=.5, position="identity")+
+  xlab("wine grade") + ylab("citric acid") +
   ggtitle("Citric Acid Distribuiton of Differnt Wine Grade")
 ```
 
@@ -269,13 +291,15 @@ As stated in section 1 the sulphates data is skewed, we tried both the original 
 ```{r echo=FALSE, log_sulphates}
 
 ggplot(redwine, aes(x=sulphates, fill=grade)) +
-  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
-  xlab("Wine Grade") + ylab("sulphates") +
+  geom_density(aes(y=..density..),
+               binwidth=.5, alpha=.5, position="identity")+
+  xlab("wine grade") + ylab("sulphates") +
   ggtitle("Sulphates Distribuiton of Differnt Wine Grade")
 
 ggplot(redwine, aes(x=log_sulphates, fill=grade)) +
-  geom_density(aes(y=..density..),binwidth=.5, alpha=.5, position="identity")+
-  xlab("Wine Grade") + ylab("log_sulphates") +
+  geom_density(aes(y=..density..),
+               binwidth=.5, alpha=.5, position="identity")+
+  xlab("wine grade") + ylab("log of sulphates") +
   ggtitle("Sulphates Distribuiton of Differnt Wine Grade")
 ```
 
@@ -308,9 +332,11 @@ The median value of chemical properties at each wine quality is  shown. The valu
   arrange(quality)
 
 # normailize with maxium value
-redwine.median$fixed.acidity=redwine.median$fixed.acidity/max(redwine.median$fixed.acidity)
-redwine.median$volatile.acidity=redwine.median$volatile.acidity/max(redwine.median$volatile.acidity)
-redwine.median$citric.acid=redwine.median$citric.acid/max(redwine.median$citric.acid)
+redwine.median$fixed.acidity = 
+  redwine.median$fixed.acidity/max(redwine.median$fixed.acidity)
+redwine.median$volatile.acidity = 
+  redwine.median$volatile.acidity/max(redwine.median$volatile.acidity)
+redwine.median$citric.acid = redwine.median$citric.acid/max(redwine.median$citric.acid)
 redwine.median$residual.sugar=redwine.median$residual.sugar/max(redwine.median$residual.sugar)  
 redwine.median$chlorides=redwine.median$chlorides/max(redwine.median$chlorides)
 redwine.median$pH=redwine.median$pH/max(redwine.median$pH)
@@ -361,7 +387,7 @@ There is interesting correlaiton between two of the main features: Volatile acid
 ggplot(redwine, aes(x=volatile.acidity,y=citric.acid)) +
   geom_point(color='#993366',alpha=1/2)+
   geom_smooth(se = FALSE,color='blue')+
-  xlab("Volatile acidity") + ylab("Citric acid") +
+  xlab("volatile acidity") + ylab("citric acid") +
   ggtitle("The Correlation Betwee Volatile acidity and Citric acid")
 
 # calculate correlatio coefficient
@@ -388,8 +414,10 @@ The figure looks over ploted, since the wine quality are discrete numbers. We ca
 
 ```{r echo=FALSE, Jitter_Plots}
   ggplot(redwine, aes(y=alcohol,x=quality,color = volatile.acidity) )+
-  geom_jitter(alpha=1/2,size=3)+
-  scale_colour_gradient2(low="red", high="blue",mid="#9933CC",midpoint = 0.8)
+        geom_jitter(alpha=1/2,size=3)+
+        xlab("alcohol") + ylab("wine quality") +
+        scale_colour_gradient2(low="red", high="blue",
+                               mid="#9933CC",midpoint = 0.8)
 
 ```
 
@@ -400,11 +428,13 @@ We can see higher quality wine have higher alcohol and lower volatile acidity.
 
 Now we add the third feature, the log scale of sulphates, and use different facet to show wine grade. 
 
-```{r echo=FALSE, Third_Features}
+```{r echo=FALSE, Third_Features, fig.width=7, fig.height=7}
 
 ggplot(redwine, aes(x=alcohol,y=volatile.acidity)) +
   geom_point(aes(color =  log_sulphates),alpha=1/2,size=3)+
-  scale_colour_gradient2(low="red", high="blue",mid="#9933CC",midpoint = -0.25)+
+  xlab("alcohol") + ylab("log of sulphates") +
+  scale_colour_gradient2(low="red", high="blue",
+                         mid="#9933CC",midpoint = -0.25)+
   facet_grid(grade ~ .) 
 ```
 
@@ -417,6 +447,7 @@ Since we can visualized 3 dimensions, including wine quality, at a time. Two gra
 ```{r echo=FALSE, Main_Chemical_Property}
 
 ggplot(aes(x = volatile.acidity, y = alcohol), data = redwine) +
+  xlab("volatile acidity") + ylab("alcohol") +
   geom_point(aes(color =  grade),size=2)
 ```
 
@@ -425,6 +456,7 @@ The same trend of alcholand volatile acidity's effect on wine qaulity can be obs
 ```{r echo=FALSE, Main_Chemical_Property2}
 
 ggplot(aes(x = log_sulphates, y = citric.acid), data = redwine) +
+  xlab("log sulphates") + ylab("citric acid") +
   geom_point(aes(color =  grade),size=2)
 ```
 
@@ -462,18 +494,17 @@ wine_quality = 2.985 + 0.276xalcohol - 2.985xvolatile.acidity + 0.908xsulphates 
 
 ### Plot One
 ```{r echo=FALSE, Plot_One}
-ggplot(re_arranged2, aes(x=quality, y=value, colour=properties)) + 
-    geom_line(aes(group=properties)) +
-    geom_point(size=3)+
-    ggtitle("Median Value of Each Chemical Properties")
-
-
+  ggplot(aes(x = quality), data = redwine)+
+  geom_histogram(colour="black", fill="#993366", width=.7,binwidth = 1)+
+                 scale_x_discrete()+
+                xlab("wine grade") + ylab("count") +
+                ggtitle("Distribution of Wine Quality")
 
 ```
 
 ### Description One
 
-The median value of chemical properties at each wine quality is  shown. The value is normalize by the  maximum value so that all the values ranges from 0 to 1. The features with monotonically increasing or decreasing trends has higher correlation with the wine quality, such as volatile acidity.  Features that are flat or not monotonical have less correlation with wine quality, such s density and free sulfur dioxide.
+Plot one shows the distribution of wine quality. Note that dataset is unbalanced. It has many count for medium quality (grade 5, 6), but much fewer count on low (grade 3,4) and high (grade 7, 8) quality wine. 
 
 
 ### Plot Two: 
@@ -481,27 +512,27 @@ The median value of chemical properties at each wine quality is  shown. The valu
 p1<-
 ggplot(redwine, aes(x=grade, y=alcohol,fill=grade)) +
   geom_boxplot()+
-   xlab("Wine Quality") + ylab("Alcohol") +
-   ggtitle("Alcohol vs Wine Grade")
+   xlab("wine quality") + ylab("alcohol") +
+   ggtitle("Alcohol vs Wine quality")
 
 p2<-
 ggplot(redwine, aes(x=grade, y=volatile.acidity,fill=grade)) +
   geom_boxplot()+
-  xlab("Wine Quality") + 
-  ylab("Volatile Acidity") +
-  ggtitle("Volatile Acidity vs Wine Grade")
+  xlab("wine quality") + 
+  ylab("volatile acidity") +
+  ggtitle("volatile acidity vs wine grade")
 
 p3<-
 ggplot(redwine, aes(x=grade, y=sulphates,fill=grade)) +
   geom_boxplot()+
-   xlab("Wine Quality") + ylab("sulphates") +
-   ggtitle("Sulphatesy vs Wine Grade")
+   xlab("wine quality") + ylab("sulphates") +
+   ggtitle("Sulphatesy vs Wine grade")
 
 p4<-
 ggplot(redwine, aes(x=grade, y=citric.acid,fill=grade)) +
   geom_boxplot()+
-   xlab("Wine Quality") + ylab("sulphates") +
-   ggtitle("Citric Acid vs Wine Grade")
+   xlab("wine quality") + ylab("citric") +
+   ggtitle("Citric acid vs Wine grade")
 grid.arrange(p1,p2,p3,p4,ncol=2)
 
 
@@ -510,22 +541,23 @@ grid.arrange(p1,p2,p3,p4,ncol=2)
 
 ### Description Two
 
-The 4 features that have the highest correlation coefficient are alcohol, volatile acidity, sulphates, citric acid. The wine quality are grouped to low (3,4) medium (5.6) and high (7,8). High quality wine have high alcohol level however, there is no significant different between medium and low quality wine. Volatile acidity decrease as wine quality increases. Sulphate and critic increase as wine quality increase.
+The 4 features that have the highest correlation coefficient are alcohol, volatile acidity, sulphates, citric acid. The wine quality are grouped to low (3,4) medium (5.6) and high (7,8). High quality wine have high alcohol level however, there is no significant different between medium and low quality wine. Volatile acidity decrease as wine quality increases. Sulphate and critic acid increase as wine quality increase.
 
 
 ### Plot Three
-```{r echo=FALSE, Plot_Three}
+```{r echo=FALSE, Plot_Three, fig.width=7, fig.height=9}
+
 p1<-
 ggplot(aes(x = volatile.acidity, y = alcohol), data = redwine) +
   geom_point(aes(color =  grade),size=2)+
+  xlab("volatile acidity") + ylab("alcohol") +
   ggtitle("Volatile acidity and Alcohol")
 
-  
 p2<-
 ggplot(aes(x = log_sulphates, y = citric.acid), data = redwine) +
   geom_point(aes(color =  grade),size=2)+
+  xlab("log of sulphates") + ylab("citric acid") +
   ggtitle("Citric Acid and Sulphates")
-
 
 grid.arrange(p1,p2,ncol=1)
 
@@ -534,7 +566,7 @@ grid.arrange(p1,p2,ncol=1)
 
 ### Description Three
 
-The 4 features are also represented in the scatter plot. 2 features are plotted at a time with color indicate wine quality. Similar trend as the last figure can be observed.
+The 4 features are also represented in the scatter plot. 2 features are plotted at a time with color indicate wine quality. Similar trend as the last figure can be observed. In general, high quality wine tend to have higher alcohol and lower volatile acidity content. They also tend to have higher sulphate and higher critic acid content.
 
 ------
 
@@ -553,6 +585,8 @@ The red wine dataset  contains 1,599 observation with 11 variables on the chemic
 Surprisingly, other chemical proprieties do not have strong correlation with wine quality, such as the residual sugar and PH .
 
 In the end, a linear model of 6 features was created to predict wine quality. However, wine quality is a complex object.  Different type grape can largely affect the wine test. There are many nuance in taste and aroma the that cannot be capture by examine its chemical component. The linear model is a overly simplified model. Good wine is more than perfect combination of different chemical components.
+
+Future improvement can be made if more data can be collected on both low-quality and high-quality wine. I noticed that the dataset is highly unbalanced. It has many data points for medium quality wine (grade 5, 6). However, for low quality (grade 3,4 ) and high quality (grade 7, 8) wine, it has fewer data points. If the data set has more records on both the low end and high end, the quality of analysis can be improved. We can be more certain about whether there is a significant correlation between a chemical component and the wine quality.
 
 ### Reference
 
