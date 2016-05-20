@@ -1,4 +1,4 @@
-Red Wine Exploration by Darui Zhang
+Red Wine Exploration
 ========================================================
 
 What property makes good red wine? In this project we try to answer this question by exploring the red wine data set. 
